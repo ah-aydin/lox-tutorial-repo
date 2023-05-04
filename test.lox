@@ -1,0 +1,10 @@
+var meh = 10;
+
+// This is a comment
+
+/*
+This is supposed to be
+a multiline comment.
+*/
+
+var nextVar2 = "gigel de 2 lei";
