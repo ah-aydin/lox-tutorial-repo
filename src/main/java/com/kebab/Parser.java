@@ -19,9 +19,8 @@ public class Parser {
             return null;
         }
     }
-
     private Expr expression() {
-        Expr expr = equality();
+        Expr expr = ternary();
 
         while (match(TokenType.COMMA)) {
             Token operator = previous();
@@ -29,7 +28,25 @@ public class Parser {
             expr = new Expr.Binary(expr, operator, right);
         }
         return expr;
-        //return equality();
+    }
+
+    private Expr ternary() {
+        Expr expr = equality();
+
+        if (match(TokenType.QUESTION)) {
+            Token questionOperator = previous();
+            Expr left = equality();
+            if (!match(TokenType.COLON)) {
+                throw error(peek(), "Expected ':' to complete ternary operator '?:'. Usage <condition> ? <expression 1> : <expression 2>");
+            }
+            Token colonOperator = previous();
+            Expr right = equality();
+            
+            Expr colonExpr = new Expr.Binary(left, colonOperator, right);
+            expr = new Expr.Binary(expr, questionOperator, colonExpr);
+        }
+
+        return expr;
     }
 
     private Expr equality() {
