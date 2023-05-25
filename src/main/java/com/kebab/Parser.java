@@ -32,18 +32,14 @@ public class Parser {
 
     private Expr ternary() {
         Expr expr = equality();
-
+        
         if (match(TokenType.QUESTION)) {
-            Token questionOperator = previous();
             Expr left = equality();
             if (!match(TokenType.COLON)) {
                 throw error(peek(), "Expected ':' to complete ternary operator '?:'. Usage <condition> ? <expression 1> : <expression 2>");
             }
-            Token colonOperator = previous();
             Expr right = equality();
-            
-            Expr colonExpr = new Expr.Binary(left, colonOperator, right);
-            expr = new Expr.Binary(expr, questionOperator, colonExpr);
+            expr = new Expr.Ternary(expr, left, right);
         }
 
         return expr;

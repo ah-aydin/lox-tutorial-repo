@@ -10,22 +10,11 @@ import java.util.List;
 
 public class App {
     private static boolean hadError = false;
+    private static boolean hadRuntimeError = false;
+
+    private static final Interpreter interpreter = new Interpreter();
 
 	public static void main( String[] args ) throws IOException {
-        // This is just for testing purposes, remove after done
-        // {
-        //     Expr expression = new Expr.Binary(
-        //         new Expr.Unary(
-        //             new Token(TokenType.MINUS, "-", null, 1),
-        //             new Expr.Literal(123)),
-        //         new Token(TokenType.STAR, "*", null, 1),
-        //         new Expr.Grouping(
-        //             new Expr.Literal(45.32))
-        //     );
-        //     System.out.println(new AstPrinter().print(expression));
-        //     System.exit(0);
-        // }
-
         if (args.length > 1) {
             System.out.println("Usage: jlox [script]");
             System.exit(64);
@@ -53,6 +42,7 @@ public class App {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
         if (hadError) System.exit(65);
+        if (hadRuntimeError) System.exit(70);
 
         // Run the program
     }
@@ -65,12 +55,8 @@ public class App {
 
         if (hadError) return;
 
-        // Print the tokens
-        // for (Token token : tokens) {
-        //     System.out.println(token);
-        // }
-        
-        System.out.println(new AstPrinter().print(expression));
+        //System.out.println(new AstPrinter().print(expression));
+        interpreter.interpret(expression);
     }
 
     public static void error(Token token, String message) {
@@ -89,4 +75,9 @@ public class App {
         System.err.println("[line " + line + "] Error" + where + ": " + message);
         hadError = true;
     }
+
+	public static void runtimeError(RuntimeError error) {
+        System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
+        hadRuntimeError = true;
+	}
 }

@@ -1,10 +1,9 @@
 package com.kebab;
 
-import java.util.List;
-
 abstract class Expr {
 	interface Visitor<R> {
 		R visitBinaryExpr(Binary expr);
+        R visitTernaryExpr(Ternary expr);
 		R visitGroupingExpr(Grouping expr);
 		R visitLiteralExpr(Literal expr);
 		R visitUnaryExpr(Unary expr);
@@ -24,6 +23,21 @@ abstract class Expr {
 			return visitor.visitBinaryExpr(this);
 		}
 	}
+
+    static class Ternary extends Expr {
+        final Expr condition;
+        final Expr left;
+        final Expr right;
+        Ternary (Expr condition, Expr left, Expr right) {
+            this.condition = condition;
+            this.left = left;
+            this.right = right;
+        }
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitTernaryExpr(this);
+        }
+    }
 
 	static class Grouping extends Expr {
 		final Expr expression;

@@ -1,22 +1,11 @@
 package com.kebab;
 
+import com.kebab.Expr.Ternary;
+
 public class AstPrinter implements Expr.Visitor<String> {
 
     public String print(Expr expr) {
         return expr.accept(this);
-    }
-
-    private String parenthesize(String name, Expr... exprs) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("(").append(name);
-        for (Expr expr : exprs) {
-            builder.append(" ");
-            builder.append(expr.accept(this));
-        }
-        builder.append(")");
-
-        return builder.toString();
     }
 
 	@Override
@@ -39,4 +28,22 @@ public class AstPrinter implements Expr.Visitor<String> {
 	public String visitUnaryExpr(Expr.Unary expr) {
         return parenthesize(expr.operator.lexeme, expr.right);
 	}
+
+    @Override
+    public String visitTernaryExpr(Ternary expr) {
+        return parenthesize("?", expr.condition, expr.left, expr.right);
+    }
+
+    private String parenthesize(String name, Expr... exprs) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(").append(name);
+        for (Expr expr : exprs) {
+            builder.append(" ");
+            builder.append(expr.accept(this));
+        }
+        builder.append(")");
+
+        return builder.toString();
+    }
 }
