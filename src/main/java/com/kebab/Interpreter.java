@@ -8,13 +8,16 @@ import com.kebab.Expr.Assign;
 import com.kebab.Expr.Binary;
 import com.kebab.Expr.Grouping;
 import com.kebab.Expr.Literal;
+import com.kebab.Expr.Logical;
 import com.kebab.Expr.Ternary;
 import com.kebab.Expr.Unary;
 import com.kebab.Expr.Variable;
 import com.kebab.Stmt.Block;
 import com.kebab.Stmt.Expression;
+import com.kebab.Stmt.If;
 import com.kebab.Stmt.Print;
 import com.kebab.Stmt.Var;
+import com.kebab.Stmt.While;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
@@ -108,6 +111,20 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return expr.value;
 	}
 
+    @Override
+    public Object visitLogicalExpr(Logical expr) {
+        Object left = evaluate(expr.left);
+
+        if (expr.operator.type == TokenType.OR && isTruthy(left)) {
+            return left;
+        }
+        if (expr.operator.type == TokenType.AND && !isTruthy(left)) {
+            return left;
+        }
+        
+        return evaluate(expr.right);
+    }
+
 	@Override
 	public Object visitUnaryExpr(Unary expr) {
         Object right = evaluate(expr.right);
@@ -158,6 +175,24 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         environment.define(stmt.name.lexeme, value);
         return null;
 	}
+
+    @Override
+    public Void visitIfStmt(If stmt) {
+        if (isTruthy(evaluate(stmt.condition))) {
+            execute(stmt.thenBranch);
+        } else {
+            execute(stmt.elseBranch);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitWhileStmt(While stmt) {
+        while (isTruthy(evaluate(stmt.condition))) {
+            execute(stmt.body);
+        }
+        return null;
+    }
 
     private void executeBlock(List<Stmt> statements, Environment environment) {
         Environment previous = this.environment;

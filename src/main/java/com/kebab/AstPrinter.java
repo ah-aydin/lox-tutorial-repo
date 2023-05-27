@@ -5,10 +5,16 @@ import com.kebab.Expr.Ternary;
 import com.kebab.Expr.Variable;
 import com.kebab.Stmt.Block;
 import com.kebab.Stmt.Expression;
+import com.kebab.Stmt.If;
 import com.kebab.Stmt.Print;
 import com.kebab.Stmt.Var;
+import com.kebab.Stmt.While;
 
 public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
+
+    public String print(Stmt stmt) {
+        return stmt.accept(this);
+    }
 
     public String print(Expr expr) {
         return expr.accept(this);
@@ -30,6 +36,11 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
         return expr.value.toString();
 	}
 
+    @Override
+    public String visitLogicalExpr(Expr.Logical expr) {
+        return parenthesize(expr.operator.lexeme, expr.left, expr.right);
+    }
+
 	@Override
 	public String visitUnaryExpr(Expr.Unary expr) {
         return parenthesize(expr.operator.lexeme, expr.right);
@@ -39,21 +50,6 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     public String visitTernaryExpr(Ternary expr) {
         return parenthesize("?", expr.condition, expr.left, expr.right);
     }
-
-    @Override
-    public String visitExpressionStmt(Expression stmt) {
-        return parenthesize("Expression", stmt.expression);
-    }
-
-    @Override
-    public String visitPrintStmt(Print stmt) {
-        return parenthesize("Print", stmt.expression);
-    }
-
-	@Override
-	public String visitVarStmt(Var stmt) {
-        return parenthesize("var ", stmt.initializer);
-	}
 
 	@Override
 	public String visitVariableExpr(Variable expr) {
@@ -74,9 +70,52 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
             builder.append(";\n");
             builder.append(s.accept(this));
         }
+        builder.append("}");
 
         return builder.toString();
 	}
+
+    @Override
+    public String visitExpressionStmt(Expression stmt) {
+        return parenthesize("Expression", stmt.expression);
+    }
+
+    @Override
+    public String visitPrintStmt(Print stmt) {
+        return parenthesize("Print", stmt.expression);
+    }
+
+	@Override
+	public String visitVarStmt(Var stmt) {
+        return parenthesize("var ", stmt.initializer);
+	}
+
+    @Override
+    public String visitIfStmt(If stmt) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(if (").append(stmt.condition.accept(this)).append(")");
+        builder.append("{").append(stmt.thenBranch.accept(this));
+        builder.append("}");
+        if (stmt.elseBranch != null) {
+            builder.append(" else {").append(stmt.elseBranch.accept(this)).append("}");
+        }
+        builder.append(")");
+
+        return builder.toString();
+    }
+
+    @Override
+    public String visitWhileStmt(While stmt) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(while (").append(stmt.condition.accept(this)).append(")");
+        builder.append("{").append(stmt.body.accept(this));
+        builder.append("}");
+        builder.append(")");
+
+        return builder.toString();
+    }
 
     private String parenthesize(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();

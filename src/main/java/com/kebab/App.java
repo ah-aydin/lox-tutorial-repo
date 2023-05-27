@@ -55,7 +55,9 @@ public class App {
 
         if (hadError) return;
 
-        //System.out.println(new AstPrinter().print(expression));
+        for (Stmt statement : statements) {
+            //System.out.println(new AstPrinter().print(statement));
+        }
         interpreter.interpret(statements);
     }
 
