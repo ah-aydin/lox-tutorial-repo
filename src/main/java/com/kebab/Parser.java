@@ -1,5 +1,6 @@
 package com.kebab;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -12,21 +13,93 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    public Expr parse() {
+    public List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(declaration());
+        }
+
+        return statements;
+    }
+
+    private Stmt declaration() {
         try {
-            return expression();
+            if (match(TokenType.VAR)) return varDeclaration();
+            return statement();
         } catch (ParseError error) {
+            synchronize();
             return null;
         }
     }
+
+    private Stmt varDeclaration() {
+        Token name = consume(TokenType.IDENTIFIER, "Expect variable name.");
+
+        Expr initializer = null;
+        if (match(TokenType.EQUAL)) {
+            initializer = expression();
+        }
+
+        consume(TokenType.SEMICOLON, "Expect ';' after variable declaration");
+        return new Stmt.Var(name, initializer);
+    }
+
+    private Stmt statement() {
+        if (match(TokenType.PRINT)) return printStatement();
+        if (match(TokenType.LEFT_BRACE)) return new Stmt.Block(block());
+        return expressionStatement();
+    }
+
+    private Stmt printStatement() {
+        Expr value = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+
+    private List<Stmt> block() {
+        List<Stmt> statements = new ArrayList<>();
+
+        while (!check(TokenType.RIGHT_BRACE) && !isAtEnd())  {
+            statements.add(declaration());
+        }
+
+        consume(TokenType.RIGHT_BRACE, "Expected '}' after block.");
+
+        return statements;
+    }
+
+    private Stmt expressionStatement() {
+        Expr value = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Expression(value);
+    }
+
     private Expr expression() {
-        Expr expr = ternary();
+        Expr expr = assignment();
 
         while (match(TokenType.COMMA)) {
             Token operator = previous();
-            Expr right = expression();
+            Expr right = assignment();
             expr = new Expr.Binary(expr, operator, right);
         }
+        return expr;
+    }
+
+    private Expr assignment() {
+        Expr expr = ternary();
+        
+        if (match (TokenType.EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable) expr).name;
+                return new Expr.Assign(name, value);
+            }
+
+            error(equals, "Invalid assignment");
+        }
+
         return expr;
     }
 
@@ -108,6 +181,7 @@ public class Parser {
         if (match(TokenType.NIL)) return new Expr.Literal(null);
 
         if (match(TokenType.NUMBER, TokenType.STRING)) return new Expr.Literal(previous().literal);
+        if (match(TokenType.IDENTIFIER)) return new Expr.Variable(previous());
         if (match(TokenType.LEFT_PARENTHESIS)) {
             Expr expr = expression();
             consume(TokenType.RIGHT_PARANTHESIS, "Expect ')' after expression.");
