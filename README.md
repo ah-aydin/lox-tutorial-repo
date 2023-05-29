@@ -2,6 +2,18 @@
 
 This is learning repo made following the chapters of http://craftinginterpreters.com/ and the challenges that were given at the end of the chapters.
 
+## Running the thigy
+
+```bash
+# Compile
+mvn clean pacakge
+
+# Run shell
+java -jar target/lox-1.0-SNAPSHOT.jar
+# Run file
+java -jar target/lox-1.0-SNAPSHOT.jar ./test.lox
+```
+
 ## Grammar rules
 ```
 # Statement grammar

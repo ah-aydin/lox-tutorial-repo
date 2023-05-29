@@ -122,7 +122,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitBreakStmt(Stmt.Break stmt) {
         if (currentWhile == WhileType.NONE) {
-            App.error(stmt.token, "Can't return from outside a function");
+            App.error(stmt.token, "Can't break from outside a loop");
         }
         return null;
     }
@@ -184,7 +184,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         currentWhile = WhileType.WHILE;
         resolve(stmt.condition);
         resolve(stmt.body);
-        currentWhile = WhileType.NONE;
+        currentWhile = enclosingWhile;
         return null;
     }
 
