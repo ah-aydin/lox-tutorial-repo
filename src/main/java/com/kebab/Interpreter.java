@@ -7,6 +7,7 @@ import com.kebab.Expr.Assign;
 import com.kebab.Expr.Binary;
 import com.kebab.Expr.Call;
 import com.kebab.Expr.Grouping;
+import com.kebab.Expr.Lambda;
 import com.kebab.Expr.Literal;
 import com.kebab.Expr.Logical;
 import com.kebab.Expr.Ternary;
@@ -160,6 +161,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	public Object visitGroupingExpr(Grouping expr) {
         return evaluate(expr.expression);
 	}
+
+    @Override
+    public Object visitLambdaExpr(Lambda expr) {
+        return expr;
+    }
 
 	@Override
 	public Object visitLiteralExpr(Literal expr) {

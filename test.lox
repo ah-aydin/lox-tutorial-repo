@@ -79,3 +79,18 @@ func makeCounter() {
 var counter = makeCounter();
 counter(); // "1".
 counter(); // "2".
+
+func testFunc2(lFunc, param2) {
+    print "testFunc2";
+    lFunc(12312);
+    print "param2 is ";
+    print param2;
+}
+
+testFunc2([a]{
+        print "something";
+        print a;
+    },
+    "kebab"
+);
+

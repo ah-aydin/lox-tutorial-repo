@@ -70,6 +70,7 @@ defineAst(
         "Ternary: Expr condition, Expr left, Expr right",
         "Call: Expr callee, Token paren, List<Expr> arguments",
         "Grouping: Expr expression",
+        "Lambda: List<Token> params, List<Stmt> body",
         "Literal : Object value",
         "Logical : Expr left, Token operator, Expr right",
         "Unary :Token operator, Expr right",

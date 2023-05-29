@@ -2,7 +2,7 @@ package com.kebab;
 
 enum TokenType {
     // Single-character tokens
-    LEFT_PARENTHESIS, RIGHT_PARANTHESIS, LEFT_BRACE, RIGHT_BRACE,
+    LEFT_PARENTHESIS, RIGHT_PARANTHESIS, LEFT_BRACE, RIGHT_BRACE, LEFT_BRACKET, RIGHT_BRACKET,
     COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR, COLON, QUESTION,
 
     // One or two character tokens

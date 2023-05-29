@@ -193,6 +193,9 @@ public class Parser {
     }
 
     private Expr assignment() {
+        if (match(TokenType.LEFT_BRACKET)) {
+            return lambda();
+        }
         Expr expr = ternary();
         
         if (match (TokenType.EQUAL)) {
@@ -208,6 +211,23 @@ public class Parser {
         }
 
         return expr;
+    }
+
+    private Expr lambda() {
+        List<Token> parameters = new ArrayList<>();
+        if (!check(TokenType.RIGHT_BRACKET)) {
+            do {
+                if (parameters.size() >= 255) {
+                    error(peek(), "Can't have more then 255 parameters");
+                }
+                parameters.add(consume(TokenType.IDENTIFIER, "Expect parameter name"));
+            } while (match(TokenType.COMMA));
+        }
+        consume(TokenType.RIGHT_BRACKET, "Expected ']' after parameters");
+
+        consume(TokenType.LEFT_BRACE, "Expect '{' before lambda body");
+        List<Stmt> body = block();
+        return new Expr.Lambda(parameters, body);
     }
 
     private Expr ternary() {
@@ -327,7 +347,7 @@ public class Parser {
                 error(peek(), "Can't have more then 255 arguments");
             }
             do {
-                arguments.add(ternary());
+                arguments.add(assignment());
             } while (match(TokenType.COMMA));
         }
 
