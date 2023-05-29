@@ -13,6 +13,7 @@ import com.kebab.Expr.Ternary;
 import com.kebab.Expr.Unary;
 import com.kebab.Expr.Variable;
 import com.kebab.Stmt.Block;
+import com.kebab.Stmt.Break;
 import com.kebab.Stmt.Expression;
 import com.kebab.Stmt.If;
 import com.kebab.Stmt.Print;
@@ -20,6 +21,17 @@ import com.kebab.Stmt.Var;
 import com.kebab.Stmt.While;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+
+    private class BreakException extends RuntimeException {
+        final Token token;
+        public BreakException(Token token) {
+            this.token = token;
+        }
+
+        public int getLine() {
+            return token.getLine();
+        }
+    }
 
     private Environment environment = new Environment();
 
@@ -30,6 +42,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             }
         } catch (RuntimeError error) {
             App.runtimeError(error);
+        } catch (BreakException error) {
+            App.report(error.getLine(), "", "'break' must be used inside a loop.");
         }
     }
 
@@ -189,10 +203,19 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitWhileStmt(While stmt) {
         while (isTruthy(evaluate(stmt.condition))) {
-            execute(stmt.body);
+            try {
+                execute(stmt.body);
+            } catch (BreakException e) {
+                break;
+            }
         }
         return null;
     }
+
+	@Override
+	public Void visitBreakStmt(Break stmt) {
+        throw new BreakException(stmt.token);
+	}
 
     private void executeBlock(List<Stmt> statements, Environment environment) {
         Environment previous = this.environment;

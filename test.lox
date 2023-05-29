@@ -3,20 +3,29 @@ var b = 1;
 var temp = 0;
 
 print "Printing out the first 20 numbers of fibbonachi sequence";
-for (var i = 1; i < 10; i = i + 1) {
+for (var i = 1; i < 20; i = i + 1) {
     print a;
     temp = a;
     a = b;
     b = temp + b;
-    if (1 == 1) {
-        print "this should print";
-    }
     if (i == 2) {
-        print "is is 2 for once";
+        print "it is 2 for once";
     } else {
         print "i is not 2. REEEEEEEEEEE";
     }
+    if (i == 11) {
+        break;
+    }
 }
+
+var meh = 10;
+while (meh > 4) {
+    print meh;
+    meh = meh - 1;
+    if (meh == 6) break;
+    if (meh == 7) print "I am 7 now";
+}
+
 print "DONE";
     
     

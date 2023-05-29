@@ -37,11 +37,15 @@ def defineAst(outputDir, baseName, types):
             file.write(f'\tstatic class {className} extends {baseName} {{\n')
 
             for field in fields.split(', '):
+                if field == "":
+                    continue
                 file.write(f'\t\tfinal {field};\n')
 
             file.write(f'\t\t{className} ({fields}) {{\n')
 
             for field in fields.split(', '):
+                if len(field.split(" ")) <= 1:
+                    continue
                 name = field.split(" ")[1]
                 file.write(f'\t\t\tthis.{name} = {name};\n')
             file.write('\t\t}\n')
@@ -77,11 +81,12 @@ defineAst(
     "Stmt",
     [
         "Block: List<Stmt> statements",
+        "Break: Token token",
         "Expression: Expr expression",
         "If: Expr condition, Stmt thenBranch, Stmt elseBranch",
         "Print : Expr expression",
         "Var: Token name, Expr initializer",
-        "While: Expr condition, Stmt body"
+        "While: Expr condition, Stmt body",
     ]
 )
 

@@ -4,6 +4,7 @@ import com.kebab.Expr.Assign;
 import com.kebab.Expr.Ternary;
 import com.kebab.Expr.Variable;
 import com.kebab.Stmt.Block;
+import com.kebab.Stmt.Break;
 import com.kebab.Stmt.Expression;
 import com.kebab.Stmt.If;
 import com.kebab.Stmt.Print;
@@ -116,6 +117,15 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
         return builder.toString();
     }
+
+	@Override
+	public String visitBreakStmt(Break stmt) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(break)");
+
+        return builder.toString();
+	}
 
     private String parenthesize(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();

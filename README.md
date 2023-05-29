@@ -8,7 +8,8 @@ This is learning repo made following the code from http://craftinginterpreters.c
 program -> declaration* EOF
 declaration -> varDecl | statement
 varDecl -> "var" IDENTFIER ("=" expression)? ";"
-statement -> exprStmt | printStmt | block | ifStmt | whileStmt | forStmt
+statement -> exprStmt | printStmt | block | ifStmt | whileStmt | forStmt | breakStmt
+breakStmt -> "break" ";"
 forStmt -> "for" "(" (varDecl | exprStmt | ";") expression? ";" expression? ")" statement
 whileStmt -> "while" | "(" expression ")" statement
 block -> "{" declaration* "}"
