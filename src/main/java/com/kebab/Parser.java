@@ -328,8 +328,6 @@ public class Parser {
             }
             do {
                 arguments.add(ternary());
-                System.out.println("REEE");
-                System.out.println(arguments.size());
             } while (match(TokenType.COMMA));
         }
 
