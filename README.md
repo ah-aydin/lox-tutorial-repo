@@ -6,7 +6,10 @@ This is learning repo made following the code from http://craftinginterpreters.c
 ```
 # Statement grammar
 program -> declaration* EOF
-declaration -> varDecl | statement
+declaration -> funcDecl | varDecl | statement
+funcDecl -> "func" function
+function -> IDENTIFIER "(" parameters? ")" block
+parameters -> IDENTIFIER ("," IDENTIFIER )*
 varDecl -> "var" IDENTFIER ("=" expression)? ";"
 statement -> exprStmt | printStmt | block | ifStmt | whileStmt | forStmt | breakStmt
 breakStmt -> "break" ";"
@@ -27,6 +30,8 @@ equality -> comparison ( ("==" | "!=") comparison)*
 comparison -> term ( ("<" | ">" | "<=" | ">=") term)*
 term -> factor ( ("+" | "-") factor)*
 factor -> unary ( ("*" | "/") unary)*
-unary -> ("!" | "-") unary | primary
+unary -> ("!" | "-") unary | call
+call -> primary ("(" arguments? ")")*
+arguments -> ternary (",", ternary)*
 primary -> NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER
 ```

@@ -2,6 +2,19 @@ var a = 1;
 var b = 1;
 var temp = 0;
 
+func sayHi(first, last) {
+    print "Hello there, " + first + " " + last + ";";
+}
+
+func addNumbers(a, b, c, d) {
+    print "The sum is";
+    print a + b + c + d;
+}
+
+func getAddedNumbers(a, b) {
+    return a + b;
+}
+
 print "Printing out the first 20 numbers of fibbonachi sequence";
 for (var i = 1; i < 20; i = i + 1) {
     print a;
@@ -27,5 +40,42 @@ while (meh > 4) {
 }
 
 print "DONE";
-    
-    
+
+print clock();
+sayHi("Ahmed Hamza", "Aydin");
+addNumbers(1, getAddedNumbers(2, 3), (false? 1 : 2), 1);
+print addNumbers;
+
+func testFunc(condition) {
+    print "This is inside the testFunc";
+    if (condition) {
+        print "The condition was true";
+        return true;
+    }
+
+    print "The condition was not true";
+    return false;
+}
+
+print "";
+var result = testFunc(1 == 1);
+print result;
+result = testFunc(1 != 1);
+print result;
+print clock();
+
+print "";
+
+func makeCounter() {
+  var i = 0;
+  func count() {
+    i = i + 1;
+    print i;
+  }
+
+  return count;
+}
+
+var counter = makeCounter();
+counter(); // "1".
+counter(); // "2".
