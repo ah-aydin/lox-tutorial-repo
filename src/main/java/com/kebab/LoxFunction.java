@@ -22,7 +22,6 @@ public class LoxFunction implements LoxCallable {
         for (int i = 0; i < declaration.params.size(); ++i) {
             Object argument = arguments.get(i);
             if (argument instanceof Expr.Lambda) {
-                System.out.println("Found lambda expr as argument");
                 Expr.Lambda lambda = (Expr.Lambda) argument;
                 Stmt.Function functionStmt = new Stmt.Function(declaration.params.get(i), lambda.params, lambda.body);
                 LoxFunction function = new LoxFunction(functionStmt, closure);

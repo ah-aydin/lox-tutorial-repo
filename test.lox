@@ -94,3 +94,15 @@ testFunc2([a]{
     "kebab"
 );
 
+var lambdaFunc = [a, b]{
+    print "This is the lambda function";
+    print a + b * 10;
+};
+print lambdaFunc;
+lambdaFunc(10, 10);
+lambdaFunc = 10;
+print lambdaFunc;
+
+var meh = (1 != 1) ? 2 : 3;
+print meh;
+

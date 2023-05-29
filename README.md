@@ -22,7 +22,7 @@ ifStmt -> "if" "(" expression ")" statement ("else" statement)?
 
 # Expression grammar
 expression -> assignment ("," assignment)*
-assignment -> IDENTIFIER "=" assignment | ternary | lambda
+assignment -> IDENTIFIER "=" (assignment | ternary | lambda) | ternay | lambda
 lambda -> "[" parameters? "]" block
 ternary -> logic_or ("?" logic_or ":" logic_or)?
 logic_or -> logic_and ("or" logic_and)*

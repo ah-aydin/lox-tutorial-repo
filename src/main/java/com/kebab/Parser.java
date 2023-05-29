@@ -62,6 +62,11 @@ public class Parser {
         }
 
         consume(TokenType.SEMICOLON, "Expect ';' after variable declaration");
+        if (initializer instanceof Expr.Lambda) {
+            Expr.Lambda lambda = (Expr.Lambda) initializer;
+            return new Stmt.Function(name, lambda.params, lambda.body);
+        }
+            
         return new Stmt.Var(name, initializer);
     }
 
