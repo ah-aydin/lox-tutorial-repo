@@ -229,9 +229,13 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     private void declare(Token name) {
-        if (scopes.isEmpty()) return;
+        Map<String, Boolean> scope;
+        if (scopes.isEmpty()) {
+            scope = globalScope;
+        } else {
+            scope = scopes.peek();
+        }
 
-        Map<String, Boolean> scope = scopes.peek();
         if (scope.containsKey(name.lexeme)) {
             App.error(name, "A variable with this name allready exists");
         }
@@ -239,7 +243,12 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     private void define(Token name) {
-        if (scopes.isEmpty()) return;
-        scopes.peek().put(name.lexeme, true);
+        Map<String, Boolean> scope;
+        if (scopes.isEmpty()) {
+            scope = globalScope;
+        } else {
+            scope = scopes.peek();
+        }
+        scope.put(name.lexeme, true);
     }
 }

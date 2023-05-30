@@ -22,10 +22,10 @@ compute2();
 print a;
 print b;
 
-var a = 10;
+a = 10;
 print a;
 
-//exit();
+exit();
 
 for (var i = 0; i < 10; i = i + 1) {
     for (var j = 0; j < 10; j = j + 1) {
@@ -135,8 +135,8 @@ lambdaFunc(10, 10);
 lambdaFunc = 10;
 print lambdaFunc;
 
-var meh = (1 != 1) ? 2 : 3;
-print meh;
+var meh2 = (1 != 1) ? 2 : 3;
+print meh2;
 
 func ttt(a) {
     print a;
