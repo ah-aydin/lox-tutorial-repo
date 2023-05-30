@@ -18,7 +18,8 @@ java -jar target/lox-1.0-SNAPSHOT.jar ./test.lox
 ```python
 # Statement grammar
 program -> declaration* EOF
-declaration -> funcDecl | varDecl | statement
+declaration -> classDecl | funcDecl | varDecl | statement
+classDecl -> "class" IDENTIFIER "{" function* "}"
 funcDecl -> "func" function
 function -> IDENTIFIER "(" parameters? ")" block
 parameters -> IDENTIFIER ("," IDENTIFIER )*
@@ -34,7 +35,7 @@ ifStmt -> "if" "(" expression ")" statement ("else" statement)?
 
 # Expression grammar
 expression -> assignment ("," assignment)*
-assignment -> IDENTIFIER "=" (assignment | ternary | lambda) | ternay | lambda
+assignment -> (call ".")? IDENTIFIER "=" assignment | ternay | lambda
 lambda -> "[" parameters? "]" block
 ternary -> logic_or ("?" logic_or ":" logic_or)?
 logic_or -> logic_and ("or" logic_and)*
@@ -44,7 +45,7 @@ comparison -> term ( ("<" | ">" | "<=" | ">=") term)*
 term -> factor ( ("+" | "-") factor)*
 factor -> unary ( ("*" | "/") unary)*
 unary -> ("!" | "-") unary | call
-call -> primary ("(" arguments? ")")*
+call -> primary ("(" arguments? ")" | "." IDENTIFIER )*
 arguments -> ternary (",", ternary)*
 primary -> NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER
 ```

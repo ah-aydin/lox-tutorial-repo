@@ -8,11 +8,14 @@ import java.util.Map;
 import com.kebab.Expr.Assign;
 import com.kebab.Expr.Binary;
 import com.kebab.Expr.Call;
+import com.kebab.Expr.Get;
 import com.kebab.Expr.Grouping;
 import com.kebab.Expr.Lambda;
 import com.kebab.Expr.Literal;
 import com.kebab.Expr.Logical;
+import com.kebab.Expr.Set;
 import com.kebab.Expr.Ternary;
+import com.kebab.Expr.This;
 import com.kebab.Expr.Unary;
 import com.kebab.Expr.Variable;
 import com.kebab.Stmt.Block;
@@ -176,6 +179,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return function.call(this, arguments);
 	}
 
+    @Override
+    public Object visitGetExpr(Get expr) {
+        Object object = evaluate(expr.object);
+        if (object instanceof LoxInstance) {
+            return ((LoxInstance) object).get(expr.name);
+        }
+
+        throw new RuntimeError(expr.name, "Only instances have properties");
+    }
+
 	@Override
 	public Object visitTernaryExpr(Ternary expr) {
         Object condition = evaluate(expr.condition);
@@ -215,6 +228,28 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return evaluate(expr.right);
     }
 
+    @Override
+    public Object visitSetExpr(Set expr) {
+        Object object = evaluate(expr.object);
+
+        if (!(object instanceof LoxInstance)) {
+            throw new RuntimeError(expr.name, "Only instances have fields");
+        }
+
+        Object value = evaluate(expr.value);
+        ((LoxInstance) object).set(expr.name, value);
+        return value;
+    }
+
+    @Override
+    public Object visitThisExpr(This expr) {
+        Integer distance = locals.get(expr);
+        if (distance != null) {
+            return environment.getAt(distance, expr.keyword.lexeme);
+        }
+        return globals.get(expr.keyword);
+    }
+
 	@Override
 	public Object visitUnaryExpr(Unary expr) {
         Object right = evaluate(expr.right);
@@ -247,6 +282,21 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitClassStmt(Stmt.Class stmt) {
+        environment.define(stmt.name.lexeme, null);
+
+        Map<String, LoxFunction> methods = new HashMap<>();
+        for (Stmt.Function method : stmt.methods) {
+            LoxFunction function = new LoxFunction(method, environment, method.name.lexeme.equals("init"));
+            methods.put(method.name.lexeme, function);
+        }
+
+        LoxClass klass = new LoxClass(stmt.name.lexeme, methods);
+        environment.assign(stmt.name, klass);
+        return null;
+    }
+
 	@Override
 	public Void visitExpressionStmt(Expression stmt) {
         evaluate(stmt.expression);
@@ -255,7 +305,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitFunctionStmt(Function stmt) {
-        LoxFunction function = new LoxFunction(stmt, environment);
+        LoxFunction function = new LoxFunction(stmt, environment, false);
         environment.define(stmt.name.lexeme, function);
         return null;
     }

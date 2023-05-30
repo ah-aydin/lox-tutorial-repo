@@ -7,9 +7,16 @@ import java.util.Stack;
 
 public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
+    private enum ClassType {
+        NONE,
+        CLASS
+    }
+
     private enum FunctionType {
         NONE,
-        FUNCTION
+        FUNCTION,
+        INITIALIAER,
+        METHOD
     }
 
     private enum WhileType {
@@ -20,6 +27,8 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private final Interpreter interpreter;
     private final Stack<Map<String, Boolean>> scopes = new Stack<>();
     private final Map<String, Boolean> globalScope = new HashMap<String, Boolean>();
+
+    private ClassType currentClass = ClassType.NONE;
     private FunctionType currentFunction = FunctionType.NONE;
     private WhileType currentWhile = WhileType.NONE;
 
@@ -57,6 +66,12 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitGetExpr(Expr.Get expr) {
+        resolve(expr.object);
+        return null;
+    }
+
+    @Override
     public Void visitGroupingExpr(Expr.Grouping expr) {
         resolve(expr.expression);
         return null;
@@ -86,6 +101,22 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitSetExpr(Expr.Set expr) {
+        resolve(expr.value);
+        resolve(expr.object);
+        return null;
+    }
+
+    @Override
+    public Void visitThisExpr(Expr.This expr) {
+        if (currentClass == ClassType.NONE) {
+            App.error(expr.keyword, "Can't use 'this' outside of a class.");
+            return null;
+        }
+        resolveLocal(expr, expr.keyword);
+        return null;
+    }
 
 	@Override
 	public Void visitTernaryExpr(Expr.Ternary expr) {
@@ -129,6 +160,26 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitClassStmt(Stmt.Class stmt) {
+        ClassType enclosingClass = currentClass;
+        currentClass = ClassType.CLASS;
+
+        declare(stmt.name);
+        define(stmt.name);
+
+        beginScope();
+        scopes.peek().put("this", true);
+
+        for (Stmt.Function method : stmt.methods) {
+            resolveFunction(method, FunctionType.METHOD);
+        }
+        endScope();
+
+        currentClass = enclosingClass;
+        return null;
+    }
+
+    @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
         resolve(stmt.expression);
         return null;
@@ -164,6 +215,9 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             App.error(stmt.keyword, "Can't return from outside a function");
         }
         if (stmt.value != null) {
+            if (currentFunction == FunctionType.INITIALIAER) {
+                App.error(stmt.keyword, "Can't return a value from a constructor");
+            }
             resolve(stmt.value);
         }
         return null;
