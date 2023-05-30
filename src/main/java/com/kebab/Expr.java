@@ -27,6 +27,10 @@ abstract class Expr {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitAssignExpr(this);
 		}
+		@Override
+		public String toString() {
+			return "(Assign: " + name.toString() + " | " + value.toString() + ")";
+		}
 	}
 
 	static class Binary extends Expr {
@@ -41,6 +45,10 @@ abstract class Expr {
 		@Override
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitBinaryExpr(this);
+		}
+		@Override
+		public String toString() {
+			return "(Binary: " + left.toString() + " | " + operator.toString() + " | " + right.toString() + ")";
 		}
 	}
 
@@ -57,6 +65,10 @@ abstract class Expr {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitTernaryExpr(this);
 		}
+		@Override
+		public String toString() {
+			return "(Ternary: " + condition.toString() + " | " + left.toString() + " | " + right.toString() + ")";
+		}
 	}
 
 	static class Call extends Expr {
@@ -72,6 +84,10 @@ abstract class Expr {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitCallExpr(this);
 		}
+		@Override
+		public String toString() {
+			return "(Call: " + callee.toString() + " | " + paren.toString() + " | " + arguments.toString() + ")";
+		}
 	}
 
 	static class Grouping extends Expr {
@@ -82,6 +98,10 @@ abstract class Expr {
 		@Override
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitGroupingExpr(this);
+		}
+		@Override
+		public String toString() {
+			return "(Grouping: " + expression.toString() + ")";
 		}
 	}
 
@@ -96,6 +116,10 @@ abstract class Expr {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitLambdaExpr(this);
 		}
+		@Override
+		public String toString() {
+			return "(Lambda: " + params.toString() + " | " + body.toString() + ")";
+		}
 	}
 
 	static class Literal extends Expr {
@@ -106,6 +130,10 @@ abstract class Expr {
 		@Override
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitLiteralExpr(this);
+		}
+		@Override
+		public String toString() {
+			return "(Literal: " + value.toString() + ")";
 		}
 	}
 
@@ -122,6 +150,10 @@ abstract class Expr {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitLogicalExpr(this);
 		}
+		@Override
+		public String toString() {
+			return "(Logical: " + left.toString() + " | " + operator.toString() + " | " + right.toString() + ")";
+		}
 	}
 
 	static class Unary extends Expr {
@@ -135,6 +167,10 @@ abstract class Expr {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitUnaryExpr(this);
 		}
+		@Override
+		public String toString() {
+			return "(Unary: " + operator.toString() + " | " + right.toString() + ")";
+		}
 	}
 
 	static class Variable extends Expr {
@@ -146,8 +182,14 @@ abstract class Expr {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitVariableExpr(this);
 		}
+		@Override
+		public String toString() {
+			return "(Variable: " + name.toString() + ")";
+		}
 	}
 
 
 	abstract <R> R accept(Visitor<R> visitor);
+
+	public String toString() { return ""; }
 }

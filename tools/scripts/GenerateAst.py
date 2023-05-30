@@ -43,11 +43,13 @@ def defineAst(outputDir, baseName, types):
 
             file.write(f'\t\t{className} ({fields}) {{\n')
 
+            toStringList = []
             for field in fields.split(', '):
                 if len(field.split(" ")) <= 1:
                     continue
                 name = field.split(" ")[1]
                 file.write(f'\t\t\tthis.{name} = {name};\n')
+                toStringList.append(f"{name}.toString()")
             file.write('\t\t}\n')
 
             file.write('\t\t@Override\n')
@@ -55,9 +57,18 @@ def defineAst(outputDir, baseName, types):
             file.write(f'\t\t\treturn visitor.visit{className}{baseName}(this);\n')
             file.write('\t\t}\n')
 
+            file.write('\t\t@Override\n')
+            file.write('\t\tpublic String toString() {\n')
+            file.write('\t\t\treturn "({}: " + {} + ")";\n'.format(className, ' + " | " + '.join(toStringList)))
+            file.write('\t\t}\n')
+        # @Override
+        # public String toString() {
+        #     return "(Assign: " + name.toString() + " | " + value.toString();
+        # }
             file.write('\t}\n\n')
 
         file.write('\n\tabstract <R> R accept(Visitor<R> visitor);\n')
+        file.write('\n\tpublic String toString() { return ""; }\n');
         file.write('}')
 
 

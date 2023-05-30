@@ -24,6 +24,10 @@ abstract class Stmt {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitBlockStmt(this);
 		}
+		@Override
+		public String toString() {
+			return "(Block: " + statements.toString() + ")";
+		}
 	}
 
 	static class Break extends Stmt {
@@ -35,6 +39,10 @@ abstract class Stmt {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitBreakStmt(this);
 		}
+		@Override
+		public String toString() {
+			return "(Break: " + token.toString() + ")";
+		}
 	}
 
 	static class Expression extends Stmt {
@@ -45,6 +53,10 @@ abstract class Stmt {
 		@Override
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitExpressionStmt(this);
+		}
+		@Override
+		public String toString() {
+			return "(Expression: " + expression.toString() + ")";
 		}
 	}
 
@@ -61,6 +73,10 @@ abstract class Stmt {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitFunctionStmt(this);
 		}
+		@Override
+		public String toString() {
+			return "(Function: " + name.toString() + " | " + params.toString() + " | " + body.toString() + ")";
+		}
 	}
 
 	static class If extends Stmt {
@@ -76,6 +92,10 @@ abstract class Stmt {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitIfStmt(this);
 		}
+		@Override
+		public String toString() {
+			return "(If: " + condition.toString() + " | " + thenBranch.toString() + " | " + elseBranch.toString() + ")";
+		}
 	}
 
 	static class Print extends Stmt {
@@ -86,6 +106,10 @@ abstract class Stmt {
 		@Override
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitPrintStmt(this);
+		}
+		@Override
+		public String toString() {
+			return "(Print: " + expression.toString() + ")";
 		}
 	}
 
@@ -100,6 +124,10 @@ abstract class Stmt {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitReturnStmt(this);
 		}
+		@Override
+		public String toString() {
+			return "(Return: " + keyword.toString() + " | " + value.toString() + ")";
+		}
 	}
 
 	static class Var extends Stmt {
@@ -112,6 +140,10 @@ abstract class Stmt {
 		@Override
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitVarStmt(this);
+		}
+		@Override
+		public String toString() {
+			return "(Var: " + name.toString() + " | " + initializer.toString() + ")";
 		}
 	}
 
@@ -126,8 +158,14 @@ abstract class Stmt {
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitWhileStmt(this);
 		}
+		@Override
+		public String toString() {
+			return "(While: " + condition.toString() + " | " + body.toString() + ")";
+		}
 	}
 
 
 	abstract <R> R accept(Visitor<R> visitor);
+
+	public String toString() { return ""; }
 }

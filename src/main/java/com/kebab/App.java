@@ -43,8 +43,6 @@ public class App {
         run(new String(bytes, Charset.defaultCharset()));
         if (hadError) System.exit(65);
         if (hadRuntimeError) System.exit(70);
-
-        // Run the program
     }
 
     private static void run(String source) {

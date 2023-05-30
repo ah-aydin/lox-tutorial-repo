@@ -15,7 +15,7 @@ java -jar target/lox-1.0-SNAPSHOT.jar ./test.lox
 ```
 
 ## Grammar rules
-```
+```python
 # Statement grammar
 program -> declaration* EOF
 declaration -> funcDecl | varDecl | statement
