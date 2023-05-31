@@ -57,9 +57,6 @@ public class App {
         resolver.resolve(statements);
         if (hadError) return;
 
-        for (Stmt statement : statements) {
-            //System.out.println(new AstPrinter().print(statement));
-        }
         interpreter.interpret(statements);
     }
 
