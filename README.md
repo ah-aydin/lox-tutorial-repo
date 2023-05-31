@@ -48,5 +48,5 @@ factor -> unary ( ("*" | "/") unary)*
 unary -> ("!" | "-") unary | call
 call -> primary ("(" arguments? ")" | "." IDENTIFIER )*
 arguments -> ternary (",", ternary)*
-primary -> NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER
+primary -> NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER | "super" "." IDENTIFIER
 ```
