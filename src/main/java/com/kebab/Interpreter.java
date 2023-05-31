@@ -61,6 +61,22 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             }
         });
 
+        globals.define("print", new LoxCallable() {
+            @Override
+            public int arity() { return 1; }
+
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments) {
+                System.out.println(arguments.get(0));
+                return null;
+            }
+
+            @Override
+            public String toString() {
+                return "<native fn>";
+            }
+        });
+
         globals.define("exit", new LoxCallable() {
             @Override
             public int arity() { return 0; }
@@ -184,9 +200,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         Object object = evaluate(expr.object);
         if (object instanceof LoxInstance) {
             return ((LoxInstance) object).get(expr.name);
+        } else if (object instanceof LoxClass) {
+            return ((LoxClass) object).getStaticMethod(expr.name.lexeme);
         }
 
-        throw new RuntimeError(expr.name, "Only instances have properties");
+        throw new RuntimeError(
+                expr.name,
+                "Only properties of an instance and static methods of a class can be accessed this way"
+        );
     }
 
 	@Override
@@ -287,12 +308,19 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         environment.define(stmt.name.lexeme, null);
 
         Map<String, LoxFunction> methods = new HashMap<>();
+        Map<String, LoxFunction> staticMethods = new HashMap<>();
         for (Stmt.Function method : stmt.methods) {
             LoxFunction function = new LoxFunction(method, environment, method.name.lexeme.equals("init"));
             methods.put(method.name.lexeme, function);
         }
+        
+        for (Stmt.Function staticMethod : stmt.staticMethods) {
+            LoxFunction function = new LoxFunction(staticMethod, environment, false);
+            staticMethods.put(staticMethod.name.lexeme, function);
+            System.out.println("Adding static method " + staticMethod.name.lexeme + " to " + stmt.name.lexeme);
+        }
 
-        LoxClass klass = new LoxClass(stmt.name.lexeme, methods);
+        LoxClass klass = new LoxClass(stmt.name.lexeme, methods, staticMethods);
         environment.assign(stmt.name, klass);
         return null;
     }

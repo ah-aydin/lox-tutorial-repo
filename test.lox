@@ -1,3 +1,33 @@
+var gib2 = 2;
+class Human {
+    init(firstName, lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    printFullName() {
+        print(this.firstName + " " + this.lastName);
+    }
+
+    getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
+
+    static printHuman() {
+        print("Printing gib2 in static method");
+        print(gib2);
+        print("This is a static method");
+    }
+}
+
+var human1 = Human("Kebab", "Master");
+human1.printFullName();
+print(human1.getFullName());
+print(Human.printHuman);
+Human.printHuman();
+
+//exit();
+
 class Kebab {
     meat() {
         return "lamb";
@@ -10,25 +40,25 @@ class Drink {
     }
 }
 
-print Kebab;
-print Drink;
+print(Kebab);
+print(Drink);
 
 var kebab = Kebab();
 var drink = Drink();
-print kebab;
-print drink;
+print(kebab);
+print(drink);
 
 kebab.type = "something";
-print kebab.type;
+print(kebab.type);
 var type = kebab.type;
-print type;
+print(type);
 
 print kebab.meat();
 
 class Cake {
     taste() {
         var adj = "gud";
-        print "Da " + this.flavor + " cake is " + adj + "!!!";
+        print ("Da " + this.flavor + " cake is " + adj + "!!!");
     }
 }
 
@@ -36,26 +66,7 @@ var cake = Cake();
 cake.flavor = "chocholate";
 cake.taste();
 
-class Human {
-    init(firstName, lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    printFullName() {
-        print this.firstName + " " + this.lastName;
-    }
-
-    getFullName() {
-        return this.firstName + " " + this.lastName;
-    }
-}
-
-var human1 = Human("Kebab", "Master");
-human1.printFullName();
-print human1.getFullName();
-
-exit();
+//exit();
 
 var a = 1;
 var b = 1;

@@ -19,8 +19,9 @@ java -jar target/lox-1.0-SNAPSHOT.jar ./test.lox
 # Statement grammar
 program -> declaration* EOF
 declaration -> classDecl | funcDecl | varDecl | statement
-classDecl -> "class" IDENTIFIER "{" function* "}"
+classDecl -> "class" IDENTIFIER "{" (function | staticFunc)* "}"
 funcDecl -> "func" function
+staticFunc -> "static" function
 function -> IDENTIFIER "(" parameters? ")" block
 parameters -> IDENTIFIER ("," IDENTIFIER )*
 varDecl -> "var" IDENTFIER ("=" expression)? ";"

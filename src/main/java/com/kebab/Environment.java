@@ -15,33 +15,6 @@ public class Environment {
         this.enclosing = enclosing;
     }
 
-    private void test(){
-        for (int i = 0; i < 10; i = i + 1) {
-            for (int j = 0; j < 10; j = j + 1) {
-                System.out.println(i * 10 + j);
-            }
-        }
-
-        { // 0
-            int i = 0;
-            while (i < 10)
-            { // 1
-                { // 2
-                    { // 3
-                        int j = 0;
-                        while (j < 10)
-                        { // 4
-                            { // 5
-                                System.out.println(i * 10 + j);
-                            }
-                            j = j + 1;
-                        }
-                    }
-                }
-                i = i + 1;
-            }
-        }
-    }
     public void define(String name, Object value) {
         values.put(name, value);
     }

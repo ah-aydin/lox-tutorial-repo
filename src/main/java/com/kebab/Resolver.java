@@ -16,7 +16,8 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         NONE,
         FUNCTION,
         INITIALIAER,
-        METHOD
+        METHOD,
+        STATIC_METHOD
     }
 
     private enum WhileType {
@@ -172,6 +173,9 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
         for (Stmt.Function method : stmt.methods) {
             resolveFunction(method, FunctionType.METHOD);
+        }
+        for (Stmt.Function staticMethod : stmt.methods) {
+            resolveFunction(staticMethod, FunctionType.STATIC_METHOD);
         }
         endScope();
 
