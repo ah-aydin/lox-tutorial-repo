@@ -86,6 +86,7 @@ defineAst(
         "Literal : Object value",
         "Logical : Expr left, Token operator, Expr right",
         "Set: Expr object, Token name, Expr value",
+        "Super: Token keyword, Token method",
         "This: Token keyword",
         "Unary :Token operator, Expr right",
         "Variable: Token name"
@@ -98,7 +99,7 @@ defineAst(
     [
         "Block: List<Stmt> statements",
         "Break: Token token",
-        "Class: Token name, List<Stmt.Function> methods, List<Stmt.Function> staticMethods",
+        "Class: Token name, List<Stmt.Function> methods, List<Stmt.Function> staticMethods, Expr.Variable superclass",
         "Expression: Expr expression",
         "Function: Token name, List<Token> params, List<Stmt> body",
         "If: Expr condition, Stmt thenBranch, Stmt elseBranch",

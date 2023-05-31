@@ -50,10 +50,12 @@ abstract class Stmt {
 		final Token name;
 		final List<Stmt.Function> methods;
 		final List<Stmt.Function> staticMethods;
-		Class (Token name, List<Stmt.Function> methods, List<Stmt.Function> staticMethods) {
+		final Expr.Variable superclass;
+		Class (Token name, List<Stmt.Function> methods, List<Stmt.Function> staticMethods, Expr.Variable superclass) {
 			this.name = name;
 			this.methods = methods;
 			this.staticMethods = staticMethods;
+			this.superclass = superclass;
 		}
 		@Override
 		<R> R accept(Visitor<R> visitor) {
@@ -61,7 +63,7 @@ abstract class Stmt {
 		}
 		@Override
 		public String toString() {
-			return "(Class: " + name.toString() + " | " + methods.toString() + " | " + staticMethods.toString() + ")";
+			return "(Class: " + name.toString() + " | " + methods.toString() + " | " + staticMethods.toString() + " | " + superclass.toString() + ")";
 		}
 	}
 

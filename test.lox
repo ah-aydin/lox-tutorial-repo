@@ -1,3 +1,63 @@
+class A {
+  method() {
+    print "A method";
+  }
+}
+
+class B extends A {
+  method() {
+    print "B method";
+  }
+
+  test() {
+    super.method();
+    print("yeye");
+  }
+}
+
+class C extends B {}
+
+C().test();
+
+class Animal {
+    walk() {
+        print(this.name + " is walking");
+    }
+}
+
+class Cat extends Animal {
+    init(name) {
+        this.name = name;
+    }
+}
+
+class Dog extends Animal {
+    init(name) {
+        this.name = name;
+    }
+}
+
+class Fish extends Animal {
+    init(name) {
+        this.name = name;
+    }
+
+    walk() {
+        print("Fishes cannot walk");
+        super.walk();
+    }
+}
+
+var dog = Dog("dog");
+var cat = Cat("cat");
+var fish = Fish("fish");
+
+dog.walk();
+cat.walk();
+fish.walk();
+
+//exit();
+
 var gib2 = 2;
 class Human {
     init(firstName, lastName) {
