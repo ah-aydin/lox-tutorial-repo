@@ -1,8 +1,8 @@
 # Crafting interpreters jlox repo
 
-This is learning repo made following the chapters of http://craftinginterpreters.com/ and the challenges that were given at the end of the chapters.
+This is a learning repo made following the chapters of http://craftinginterpreters.com/ and the challenges that were given at the end of the chapters.
 
-## Running the thigy
+## Running the thingy
 
 ```bash
 # Compile
